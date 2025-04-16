@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "搜尋結果";
+}
+
+<div class="container mt-4">
+    <section class="hero mb-5">
+        <h2>搜尋結果</h2>
+        <p>關鍵字: "@ViewBag.Keyword" 的搜尋結果</p>
+    </section>
+
+    <!-- 搜尋欄 -->
+    <div class="search-box mb-4">
+        <form method="get" action="@Url.Action("Search", "PaperManagement")" class="d-flex">
+            <input type="text" class="form-control me-2" name="keyword" placeholder="搜索文獻...（標題、作者、摘要或關鍵字）" value="@ViewBag.Keyword">
+            <button class="btn btn-primary" type="submit">搜索</button>
+        </form>
+    </div>
+
+    <!-- 搜尋結果 -->
+    <section class="papers-list mb-5">
+        @if (ViewBag.SearchResults == null || ViewBag.SearchResults.Count == 0)
+        {
+            <div class="alert alert-info">
+                <p>沒有找到符合 "@ViewBag.Keyword" 的搜尋結果。</p>
+                <p>請嘗試使用不同的關鍵字，或瀏覽我們的<a href="@Url.Action("Papers", "PaperManagement")">文獻列表</a>。</p>
+            </div>
+        }
+        else
+        {
+            <h3>共找到 @ViewBag.ResultCount 篇相關文獻</h3>
+            <div class="list-group">
+                @foreach (var paper in ViewBag.SearchResults)
+                {
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">@paper.Title</h5>
+                            <small class="text-muted">@paper.Year 年</small>
+                        </div>
+                        <p class="mb-1">@paper.Authors</p>
+                        <p class="mb-1">@(paper.Abstract.Length > 200 ? paper.Abstract.Substring(0, 200) + "..." : paper.Abstract)</p>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <div>
+                                @if (!string.IsNullOrEmpty(paper.Keywords))
+                                {
+                                    foreach (var keyword in paper.Keywords.Split(','))
+                                    {
+                                        <span class="badge bg-primary">@keyword.Trim()</span>
+                                    }
+                                }
+                            </div>
+                            <div>
+                                <small class="text-muted me-3">期刊: @paper.Journal</small>
+                                <small class="text-muted me-3"><i class="bi bi-eye"></i> 瀏覽: @paper.ClickCount 次</small>
+
+                                <!-- 顯示讚數 -->
+                                @{
+                                    int likeCount = 0;
+                                    if (ViewBag.LikeCounts != null && ViewBag.LikeCounts.ContainsKey(paper.PaperId))
+                                    {
+                                        likeCount = ViewBag.LikeCounts[paper.PaperId];
+                                    }
+                                }
+                                <small class="text-muted me-3"><i class="bi bi-hand-thumbs-up"></i> 讚: @likeCount</small>
+
+                                <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = paper.PaperId })" class="btn btn-sm btn-outline-primary">查看詳情</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</div>
+
+<style>
+    .hero {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-box {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+    }
+
+    .list-group-item {
+        border-left: 5px solid #0d6efd;
+        transition: all 0.3s ease;
+    }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+
+    .badge {
+        margin-right: 5px;
+    }
+</style>
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">

@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="LiteratureModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="CategoryId" />
+    </Key>
+    <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="PaperCategory" Relationship="Self.FK_PaperCategory_Category" FromRole="Category" ToRole="PaperCategory" />
+  </EntityType>
+  <EntityType Name="Collection">
+    <Key>
+      <PropertyRef Name="CollectionId" />
+    </Key>
+    <Property Name="CollectionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="PaperId" Type="Int32" Nullable="false" />
+    <Property Name="CollectionDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Paper" Relationship="Self.FK_Collection_Paper" FromRole="Collection" ToRole="Paper" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Collection_User" FromRole="Collection" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Comment">
+    <Key>
+      <PropertyRef Name="CommentId" />
+    </Key>
+    <Property Name="CommentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="PaperId" Type="Int32" Nullable="false" />
+    <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="CommentDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Paper" Relationship="Self.FK_Comment_Paper" FromRole="Comment" ToRole="Paper" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Comment_User" FromRole="Comment" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Paper">
+    <Key>
+      <PropertyRef Name="PaperId" />
+    </Key>
+    <Property Name="PaperId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Authors" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Abstract" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Journal" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Year" Type="Int32" Nullable="false" />
+    <Property Name="Keywords" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="FilePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PreviewImagePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ClickCount" Type="Int32" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Collection" Relationship="Self.FK_Collection_Paper" FromRole="Paper" ToRole="Collection" />
+    <NavigationProperty Name="Comment" Relationship="Self.FK_Comment_Paper" FromRole="Paper" ToRole="Comment" />
+    <NavigationProperty Name="PaperCategory" Relationship="Self.FK_PaperCategory_Paper" FromRole="Paper" ToRole="PaperCategory" />
+  </EntityType>
+  <EntityType Name="PaperCategory">
+    <Key>
+      <PropertyRef Name="PaperCategoryId" />
+    </Key>
+    <Property Name="PaperCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PaperId" Type="Int32" Nullable="false" />
+    <Property Name="CategoryId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Category" Relationship="Self.FK_PaperCategory_Category" FromRole="PaperCategory" ToRole="Category" />
+    <NavigationProperty Name="Paper" Relationship="Self.FK_PaperCategory_Paper" FromRole="PaperCategory" ToRole="Paper" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="RegisterDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastLoginDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Collection" Relationship="Self.FK_Collection_User" FromRole="Users" ToRole="Collection" />
+    <NavigationProperty Name="Comment" Relationship="Self.FK_Comment_User" FromRole="Users" ToRole="Comment" />
+  </EntityType>
+  <Association Name="FK_PaperCategory_Category">
+    <End Role="Category" Type="Self.Category" Multiplicity="1" />
+    <End Role="PaperCategory" Type="Self.PaperCategory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="CategoryId" />
+      </Principal>
+      <Dependent Role="PaperCategory">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Collection_Paper">
+    <End Role="Paper" Type="Self.Paper" Multiplicity="1" />
+    <End Role="Collection" Type="Self.Collection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Paper">
+        <PropertyRef Name="PaperId" />
+      </Principal>
+      <Dependent Role="Collection">
+        <PropertyRef Name="PaperId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Collection_User">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="Collection" Type="Self.Collection" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Collection">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Comment_Paper">
+    <End Role="Paper" Type="Self.Paper" Multiplicity="1" />
+    <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Paper">
+        <PropertyRef Name="PaperId" />
+      </Principal>
+      <Dependent Role="Comment">
+        <PropertyRef Name="PaperId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Comment_User">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Comment">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PaperCategory_Paper">
+    <End Role="Paper" Type="Self.Paper" Multiplicity="1" />
+    <End Role="PaperCategory" Type="Self.PaperCategory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Paper">
+        <PropertyRef Name="PaperId" />
+      </Principal>
+      <Dependent Role="PaperCategory">
+        <PropertyRef Name="PaperId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="LiteratureEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Category" EntityType="Self.Category" />
+    <EntitySet Name="Collection" EntityType="Self.Collection" />
+    <EntitySet Name="Comment" EntityType="Self.Comment" />
+    <EntitySet Name="Paper" EntityType="Self.Paper" />
+    <EntitySet Name="PaperCategory" EntityType="Self.PaperCategory" />
+    <EntitySet Name="Users" EntityType="Self.Users" />
+    <AssociationSet Name="FK_PaperCategory_Category" Association="Self.FK_PaperCategory_Category">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="PaperCategory" EntitySet="PaperCategory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Collection_Paper" Association="Self.FK_Collection_Paper">
+      <End Role="Paper" EntitySet="Paper" />
+      <End Role="Collection" EntitySet="Collection" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Collection_User" Association="Self.FK_Collection_User">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Collection" EntitySet="Collection" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Comment_Paper" Association="Self.FK_Comment_Paper">
+      <End Role="Paper" EntitySet="Paper" />
+      <End Role="Comment" EntitySet="Comment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Comment_User" Association="Self.FK_Comment_User">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Comment" EntitySet="Comment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PaperCategory_Paper" Association="Self.FK_PaperCategory_Paper">
+      <End Role="Paper" EntitySet="Paper" />
+      <End Role="PaperCategory" EntitySet="PaperCategory" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

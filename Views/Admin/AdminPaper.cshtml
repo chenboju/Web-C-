@@ -1,0 +1,397 @@
+﻿@{
+    ViewBag.Title = "文獻管理";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>文獻管理</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- 修改後的新增按鈕 -->
+        <button type="button" class="btn btn-primary" id="addPaperBtn">
+            <i class="fas fa-plus"></i> 新增文獻
+        </button>
+        <hr />
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-info">
+                @TempData["Message"]
+            </div>
+        }
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>標題</th>
+                        <th>作者</th>
+                        <th>年份</th>
+                        <th>類別</th>
+                        <th>狀態</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Papers != null)
+                    {
+                        foreach (var paper in ViewBag.Papers)
+                        {
+                            <tr>
+                                <td>@paper.PaperId</td>
+                                <td>@paper.Title</td>
+                                <td>@paper.Authors</td>
+                                <td>@paper.Year</td>
+                                <td>
+                                    @if (ViewBag.PaperCategories != null && ViewBag.PaperCategories.ContainsKey(paper.PaperId))
+                                    {
+                                        foreach (var cat in ViewBag.PaperCategories[paper.PaperId])
+                                        {
+                                            string badgeClass = "badge-info"; // 默認樣式
+
+                                            // 根據類別名稱選擇適當的樣式
+                                            if (cat.ToLower().Contains("fundamentals"))
+                                            {
+                                                badgeClass = "badge-rag-fundamentals";
+                                            }
+                                            else if (cat.ToLower().Contains("graph"))
+                                            {
+                                                badgeClass = "badge-graph-based-rag";
+                                            }
+                                            else if (cat.ToLower().Contains("evaluation"))
+                                            {
+                                                badgeClass = "badge-rag-evaluation";
+                                            }
+
+                                            <span class="badge @badgeClass">@cat</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @if (paper.IsActive)
+                                    {
+                                        <span class="badge badge-success">已上架</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">已下架</span>
+                                    }
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary edit-paper"
+                                            data-id="@paper.PaperId"
+                                            data-title="@paper.Title"
+                                            data-authors="@paper.Authors"
+                                            data-abstract="@paper.Abstract"
+                                            data-journal="@paper.Journal"
+                                            data-year="@paper.Year"
+                                            data-keywords="@paper.Keywords"
+                                            data-external-url="@paper.ExternalUrl"
+                                            data-is-active="@paper.IsActive.ToString().ToLower()">
+                                        編輯
+                                    </button>
+
+                                    @if (paper.IsActive)
+                                    {
+                                        using (Html.BeginForm("Paper_ToggleStatus", "Admin", FormMethod.Post, new { style = "display:inline;" }))
+                                        {
+                                            <input type="hidden" name="PaperId" value="@paper.PaperId" />
+                                            <button type="submit" class="btn btn-sm btn-danger">下架</button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (Html.BeginForm("Paper_ToggleStatus", "Admin", FormMethod.Post, new { style = "display:inline;" }))
+                                        {
+                                            <input type="hidden" name="PaperId" value="@paper.PaperId" />
+                                            <button type="submit" class="btn btn-sm btn-success">上架</button>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 新增文獻模態框 -->
+<div class="modal fade" id="addPaperModal" tabindex="-1" role="dialog" aria-labelledby="addPaperModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPaperModalLabel">新增文獻</h5>
+                <button type="button" class="close" id="addModalCloseBtn" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Paper_Add", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="form-group">
+                        <label for="Title">標題</label>
+                        <input type="text" class="form-control" id="Title" name="Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Authors">作者</label>
+                        <input type="text" class="form-control" id="Authors" name="Authors" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Abstract">摘要</label>
+                        <textarea class="form-control" id="Abstract" name="Abstract" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="Journal">期刊/出版物</label>
+                        <input type="text" class="form-control" id="Journal" name="Journal">
+                    </div>
+                    <div class="form-group">
+                        <label for="Year">年份</label>
+                        <input type="number" class="form-control" id="Year" name="Year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Keywords">關鍵字</label>
+                        <input type="text" class="form-control" id="Keywords" name="Keywords" placeholder="以逗號分隔">
+                    </div>
+                    <div class="form-group">
+                        <label for="ExternalUrl">外部連結URL</label>
+                        <input type="url" class="form-control" id="ExternalUrl" name="ExternalUrl">
+                        <small class="form-text text-muted">若提供URL，用戶將直接連結到外部網站而非下載PDF</small>
+                    </div>
+                    <div class="form-group">
+                        <label>分類</label>
+                        <div>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var category in ViewBag.Categories)
+                                {
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="selectedCategories" value="@category.CategoryId" id="category-@category.CategoryId">
+                                        <label class="form-check-label" for="category-@category.CategoryId">@category.Name</label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                        <label for="pdfFile">PDF文件</label>
+                        <input type="file" class="form-control-file" id="pdfFile" name="pdfFile">
+                    </div>
+                    <div class="form-group">
+                        <label for="previewImage">預覽圖片</label>
+                        <input type="file" class="form-control-file" id="previewImage" name="previewImage">
+                    </div>*@
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="IsActive" name="IsActive" value="true" checked>
+                        <!-- 為了確保未勾選時也能傳值 -->
+                        <input type="hidden" name="IsActive" value="false">
+                        <label class="form-check-label" for="IsActive">立即上架</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="addModalCancelBtn">取消</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 編輯文獻模態框 -->
+<div class="modal fade" id="editPaperModal" tabindex="-1" role="dialog" aria-labelledby="editPaperModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPaperModalLabel">編輯文獻</h5>
+                <button type="button" class="close" id="editModalCloseBtn" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Paper_Edit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "editPaperForm" }))
+                {
+                    <input type="hidden" id="edit-PaperId" name="PaperId">
+                    <div class="form-group">
+                        <label for="edit-Title">標題</label>
+                        <input type="text" class="form-control" id="edit-Title" name="Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-Authors">作者</label>
+                        <input type="text" class="form-control" id="edit-Authors" name="Authors" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-Abstract">摘要</label>
+                        <textarea class="form-control" id="edit-Abstract" name="Abstract" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-Journal">期刊/出版物</label>
+                        <input type="text" class="form-control" id="edit-Journal" name="Journal">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-Year">年份</label>
+                        <input type="number" class="form-control" id="edit-Year" name="Year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-Keywords">關鍵字</label>
+                        <input type="text" class="form-control" id="edit-Keywords" name="Keywords" placeholder="以逗號分隔">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-ExternalUrl">外部連結URL</label>
+                        <input type="url" class="form-control" id="edit-ExternalUrl" name="ExternalUrl">
+                        <small class="form-text text-muted">若提供URL，用戶將直接連結到外部網站而非下載PDF</small>
+                    </div>
+                    <div class="form-group">
+                        <label>分類</label>
+                        <div id="edit-categories">
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var category in ViewBag.Categories)
+                                {
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input edit-category" type="checkbox" name="selectedCategories" value="@category.CategoryId" id="edit-category-@category.CategoryId">
+                                        <label class="form-check-label" for="edit-category-@category.CategoryId">@category.Name</label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <!-- 移除了PDF文件和預覽圖片上傳欄位 -->
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit-IsActive" name="IsActive" value="true">
+                        <!-- 為了確保未勾選時也能傳值 -->
+                        <input type="hidden" name="IsActive" value="false">
+                        <label class="form-check-label" for="edit-IsActive">上架</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="editModalCancelBtn">取消</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // 檢查 jQuery 和 Bootstrap 是否正確加載
+            console.log("jQuery 版本:", $.fn.jquery);
+
+            if (typeof($.fn.modal) === 'undefined') {
+                console.log("警告: Bootstrap modal 功能不可用!");
+            } else {
+                console.log("Bootstrap modal 功能已加載");
+            }
+
+            // 新增文獻按鈕點擊事件
+            $("#addPaperBtn").click(function() {
+                console.log("新增文獻按鈕被點擊");
+                try {
+                    $('#addPaperModal').modal('show');
+                    console.log("嘗試顯示模態框");
+                } catch (e) {
+                    console.error("顯示模態框時出錯:", e);
+                }
+            });
+
+            // 新增模態框的關閉和取消按鈕
+            $("#addModalCloseBtn, #addModalCancelBtn").click(function() {
+                console.log("關閉或取消新增模態框");
+                $('#addPaperModal').modal('hide');
+            });
+
+            // 編輯模態框的關閉和取消按鈕
+            $("#editModalCloseBtn, #editModalCancelBtn").click(function() {
+                console.log("關閉或取消編輯模態框");
+                $('#editPaperModal').modal('hide');
+            });
+
+            // 編輯文獻按鈕點擊事件
+            $('.edit-paper').click(function () {
+                var paperId = $(this).data('id');
+                var title = $(this).data('title');
+                var authors = $(this).data('authors');
+                var abstract = $(this).data('abstract');
+                var journal = $(this).data('journal');
+                var year = $(this).data('year');
+                var keywords = $(this).data('keywords');
+                var externalUrl = $(this).data('external-url');
+                var isActive = $(this).data('is-active') === 'true';
+
+                console.log("編輯文獻:", paperId, title);
+
+                // 填充模態框
+                $('#edit-PaperId').val(paperId);
+                $('#edit-Title').val(title);
+                $('#edit-Authors').val(authors);
+                $('#edit-Abstract').val(abstract);
+                $('#edit-Journal').val(journal);
+                $('#edit-Year').val(year);
+                $('#edit-Keywords').val(keywords);
+                $('#edit-ExternalUrl').val(externalUrl);
+
+                // 設置是否上架的複選框
+                if (isActive) {
+                    $('#edit-IsActive').prop('checked', true);
+                } else {
+                    $('#edit-IsActive').prop('checked', false);
+                }
+
+                // 清除所有分類選擇
+                $('.edit-category').prop('checked', false);
+
+                // 使用AJAX獲取此文獻的分類
+                $.ajax({
+                    url: '@Url.Action("GetPaperCategories", "Admin")',
+                    type: 'GET',
+                    data: { paperId: paperId },
+                    success: function (categories) {
+                        // 勾選對應的分類
+                        $.each(categories, function (i, categoryId) {
+                            $('#edit-category-' + categoryId).prop('checked', true);
+                        });
+                    }
+                });
+
+                // 顯示模態框
+                try {
+                    $('#editPaperModal').modal('show');
+                } catch (e) {
+                    console.error("顯示編輯模態框時出錯:", e);
+                }
+            });
+
+            // 確保複選框值正確傳遞
+            $('#IsActive').change(function() {
+                if($(this).is(':checked')) {
+                    // 如果勾選，確保隱藏欄位不會覆蓋值
+                    $(this).next('input[type=hidden]').prop('disabled', true);
+                } else {
+                    // 如果未勾選，啟用隱藏欄位以傳遞false
+                    $(this).next('input[type=hidden]').prop('disabled', false);
+                }
+            });
+
+            $('#edit-IsActive').change(function() {
+                if($(this).is(':checked')) {
+                    // 如果勾選，確保隱藏欄位不會覆蓋值
+                    $(this).next('input[type=hidden]').prop('disabled', true);
+                } else {
+                    // 如果未勾選，啟用隱藏欄位以傳遞false
+                    $(this).next('input[type=hidden]').prop('disabled', false);
+                }
+            });
+
+            // 初始設定 - 防止頁面載入時複選框和隱藏欄位衝突
+            if ($('#IsActive').is(':checked')) {
+                $('#IsActive').next('input[type=hidden]').prop('disabled', true);
+            }
+            if ($('#edit-IsActive').is(':checked')) {
+                $('#edit-IsActive').next('input[type=hidden]').prop('disabled', true);
+            }
+        });
+    </script>
+}

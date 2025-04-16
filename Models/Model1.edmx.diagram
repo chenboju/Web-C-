@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fab7852d676c47deaf5b195696716651" Name="Diagram1">
+        <EntityTypeShape EntityType="LiteratureModel.Category" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LiteratureModel.Collection" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LiteratureModel.Comment" Width="1.5" PointX="6" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LiteratureModel.Paper" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LiteratureModel.PaperCategory" Width="1.5" PointX="3" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LiteratureModel.Users" Width="1.5" PointX="0.75" PointY="8.25" IsExpanded="true" />
+        <AssociationConnector Association="LiteratureModel.FK_PaperCategory_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="LiteratureModel.FK_Collection_Paper" ManuallyRouted="false" />
+        <AssociationConnector Association="LiteratureModel.FK_Collection_User" ManuallyRouted="false" />
+        <AssociationConnector Association="LiteratureModel.FK_Comment_Paper" ManuallyRouted="false" />
+        <AssociationConnector Association="LiteratureModel.FK_Comment_User" ManuallyRouted="false" />
+        <AssociationConnector Association="LiteratureModel.FK_PaperCategory_Paper" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="LiteratureModel.Likes" Width="1.5" PointX="3" PointY="8.375" />
+        <AssociationConnector Association="LiteratureModel.FK_Like_Paper" />
+        <AssociationConnector Association="LiteratureModel.FK_Like_User" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

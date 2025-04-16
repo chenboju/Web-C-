@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "請先登入";
+}
+
+<div class="container mt-4">
+    <div class="alert alert-warning">
+        <h4>需要登入</h4>
+        <p>您需要先登入才能訪問收藏功能。</p>
+        <a href="@Url.Action("Login", "Home")" class="btn btn-primary">前往登入</a>
+    </div>
+</div>

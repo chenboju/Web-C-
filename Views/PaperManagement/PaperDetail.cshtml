@@ -1,0 +1,155 @@
+﻿@{
+    ViewBag.Title = "文獻詳情";
+}
+
+<div class="container mt-4">
+    <section class="hero mb-5">
+        <h2>@ViewBag.Paper.Title</h2>
+        <p>@ViewBag.Paper.Authors</p>
+    </section>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-info">
+            @TempData["Message"]
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <span class="badge bg-primary me-2">@ViewBag.Paper.Year 年</span>
+                    <span class="text-muted">@ViewBag.Paper.Journal</span>
+                </div>
+                <div>
+                    <span class="me-3"><i class="bi bi-eye"></i> 瀏覽量: @ViewBag.Paper.ClickCount</span>
+                    <span class="me-3"><i class="bi bi-hand-thumbs-up"></i> 讚數: @ViewBag.LikeCount</span>
+                    @if (Session["UserId"] != null)
+                    {
+                        if (ViewBag.IsCollected)
+                        {
+                            <span class="badge bg-success me-2"><i class="bi bi-bookmark-check-fill"></i> 已收藏</span>
+                        }
+                        else
+                        {
+                            <form method="post" action="@Url.Action("Add", "MyCollection")" class="d-inline me-2">
+                                <input type="hidden" name="paperId" value="@ViewBag.Paper.PaperId" />
+                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-bookmark-plus"></i> 添加到我的收藏
+                                </button>
+                            </form>
+                        }
+
+                        <!-- 讚/取消讚按鈕 -->
+                        if (ViewBag.IsLiked)
+                        {
+                            <form method="post" action="@Url.Action("RemoveLike", "PaperManagement")" class="d-inline">
+                                <input type="hidden" name="paperId" value="@ViewBag.Paper.PaperId" />
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="bi bi-hand-thumbs-up-fill"></i> 已讚
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form method="post" action="@Url.Action("AddLike", "PaperManagement")" class="d-inline">
+                                <input type="hidden" name="paperId" value="@ViewBag.Paper.PaperId" />
+                                <button type="submit" class="btn btn-outline-success btn-sm">
+                                    <i class="bi bi-hand-thumbs-up"></i> 讚
+                                </button>
+                            </form>
+                        }
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Login", "Home")" class="btn btn-outline-primary btn-sm me-2">
+                            <i class="bi bi-bookmark-plus"></i> 登入收藏
+                        </a>
+                        <a href="@Url.Action("Login", "Home")" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-hand-thumbs-up"></i> 登入按讚
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <h4>摘要</h4>
+            <p>@ViewBag.Paper.Abstract</p>
+
+            @if (!string.IsNullOrEmpty(ViewBag.Paper.Keywords))
+            {
+                <h4>關鍵字</h4>
+                <div class="mb-3">
+                    @foreach (var keyword in ViewBag.Paper.Keywords.Split(','))
+                    {
+                        <span class="badge bg-secondary me-1">@keyword.Trim()</span>
+                    }
+                </div>
+            }
+
+            <h4>取得文獻</h4>
+            <p>
+                @if (!string.IsNullOrEmpty(ViewBag.Paper.ExternalUrl))
+                {
+                    <a href="@ViewBag.Paper.ExternalUrl" class="btn btn-primary" target="_blank">
+                        <i class="bi bi-link"></i> 前往閱讀文獻
+                    </a>
+                }
+                else if (!string.IsNullOrEmpty(ViewBag.Paper.FilePath))
+                {
+                    <a href="@Url.Action("Download", "PaperManagement", new { id = ViewBag.Paper.PaperId })" class="btn btn-primary">
+                        <i class="bi bi-download"></i> 下載文獻
+                    </a>
+                }
+                else
+                {
+                    <span class="text-muted">此文獻暫無可下載檔案或外部連結</span>
+                }
+            </p>
+        </div>
+    </div>
+
+    <!-- 相關文獻 -->
+    @if (ViewBag.RelatedPapers != null && ViewBag.RelatedPapers.Count > 0)
+    {
+        <section class="mb-4">
+            <h3>相關文獻</h3>
+            <div class="list-group">
+                @foreach (var paper in ViewBag.RelatedPapers)
+                {
+                    <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = paper.PaperId })" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">@paper.Title</h5>
+                            <small>@paper.Year 年</small>
+                        </div>
+                        <p class="mb-1">@paper.Authors</p>
+                        <small>@paper.Journal</small>
+                    </a>
+                }
+            </div>
+        </section>
+    }
+</div>
+
+<style>
+    .hero {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+</style>

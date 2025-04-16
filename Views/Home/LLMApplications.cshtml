@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "大語言模型應用專區";
+}
+
+<div class="container mt-4">
+    <section class="hero mb-5">
+        <h2>大語言模型應用專區</h2>
+        <p>RAG(檢索增強生成)在大語言模型領域具有獨特的優勢，包括提升事實準確性、增強答案完整性和擴展知識範圍等。本專區收集整理了RAG在大語言模型領域的最新研究進展，包括文本生成、知識檢索和語義理解等方向。</p>
+    </section>
+
+    <!-- 研究方向 -->
+    <section class="mb-5">
+        <h2>研究方向</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">事實增強生成</h3>
+                        <p class="card-text">通過RAG技術增強大語言模型的事實準確性，減少幻覺和錯誤信息的產生，特別適用於需要高度準確性的領域。</p>
+                        <a href="#" class="btn btn-primary">查看文獻</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">知識更新與拓展</h3>
+                        <p class="card-text">使用RAG技術為大語言模型提供最新知識和專業領域資訊，突破預訓練知識的時間限制和領域局限性。</p>
+                        <a href="#" class="btn btn-primary">查看文獻</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">長文本理解與生成</h3>
+                        <p class="card-text">利用RAG技術增強大語言模型處理和生成長文本的能力，改善上下文一致性和主題連貫性，適用於長篇內容創作。</p>
+                        <a href="#" class="btn btn-primary">查看文獻</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 精選文獻 -->
+    <section class="mb-5">
+        <h2>精選文獻</h2>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection</h3>
+                        <p class="card-text authors">Akari Asai, Zeqiu Wu, Yizhong Wang, et al.</p>
+                        <p class="card-text">提出了Self-RAG方法，通過自我反思來學習檢索、生成和評審能力。Self-RAG使模型能夠判斷何時應該進行檢索、如何有效利用檢索到的資訊，以及如何評價自己生成的內容質量。實驗表明，Self-RAG在各種評估基準上優於現有方法。</p>
+                        <p class="card-text journal">arXiv (2023), 預印本</p>
+                        <a href="#" class="btn btn-primary">查看詳情</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</h3>
+                        <p class="card-text authors">Patrick Lewis, Ethan Perez, Aleksandra Piktus, et al.</p>
+                        <p class="card-text">本文提出了檢索增強生成(RAG)方法，該方法結合了預訓練的神經檢索器和序列到序列的生成器。RAG在開放域問答、事實驗證、槽填充等知識密集型任務上取得了顯著的性能提升，同時提高了生成文本的可解釋性。</p>
+                        <p class="card-text journal">NeurIPS (2020), 頂級會議</p>
+                        <a href="#" class="btn btn-primary">查看詳情</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">Improving Language Models by Retrieving from Trillions of Tokens</h3>
+                        <p class="card-text authors">Sebastian Borgeaud, Arthur Mensch, Jordan Hoffmann, et al.</p>
+                        <p class="card-text">引入了RETRO (Retrieval-Enhanced TRansfOrmer)，一種利用從萬億級token中檢索來增強語言模型的方法。在不增加參數量的情況下，RETRO顯著提高了模型性能，特別是在需要事實性和最新知識的任務上，為大型語言模型的知識更新提供了有效解決方案。</p>
+                        <p class="card-text journal">ICML (2022), 頂級會議</p>
+                        <a href="#" class="btn btn-primary">查看詳情</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">Internet-Augmented Dialogue Generation</h3>
+                        <p class="card-text authors">Mojtaba Komeili, Kurt Shuster, Jason Weston</p>
+                        <p class="card-text">探討了如何利用互聯網檢索來增強開放域對話系統。通過在對話生成過程中引入實時網絡搜索，模型能夠獲取最新和相關的資訊，顯著提高了回應的事實準確性和信息量，同時保持對話的自然流暢。</p>
+                        <p class="card-text journal">ACL (2022), 頂級會議</p>
+                        <a href="#" class="btn btn-primary">查看詳情</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 研究進展 -->
+    <section class="mb-5">
+        <h2>研究進展</h2>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">RAG與大模型協同機制研究</h3>
+                <p class="card-text">最新研究顯示，RAG與大語言模型的協同機制是提升性能的關鍵。研究者們探索了不同的融合策略，包括早期融合和晚期融合，以及如何在不同階段引入檢索結果。實驗表明，針對不同類型的查詢，採用自適應的檢索策略和融合方法能夠顯著提高模型效果。</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">檢索器與生成器聯合訓練</h3>
+                <p class="card-text">傳統RAG系統中的檢索器和生成器通常是獨立訓練的，這限制了系統整體性能。最新研究提出了聯合訓練方法，通過生成器的反饋信號來優化檢索器，同時檢索器提供的相關文檔也用於改進生成器。這種端到端訓練框架在多個基準測試上都取得了顯著進步。</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">多步驟推理與迭代檢索</h3>
+                <p class="card-text">解決複雜問題通常需要多步驟推理和多次檢索。最新研究提出的迭代RAG方法允許模型在生成過程中進行多次檢索，每次檢索都基於先前生成的中間結果，從而實現複雜問題的分解和逐步解決。實驗表明，這種方法在數學問題解決和多步驟推理任務上特別有效。</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .hero {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .card .card-title {
+        color: #0d6efd;
+    }
+
+    .authors {
+        font-style: italic;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+
+    .journal {
+        font-weight: bold;
+        color: #495057;
+        margin-top: 0.5rem;
+    }
+</style>

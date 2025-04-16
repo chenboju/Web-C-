@@ -1,0 +1,161 @@
+﻿@{
+    ViewBag.Title = "我的收藏";
+}
+
+<div class="container mt-4">
+    <section class="hero mb-5">
+        <h2>我的收藏</h2>
+        <p>這裡列出了您收藏的所有文獻，您可以管理您的收藏和添加筆記。</p>
+    </section>
+
+    @* 調試信息區塊 *@
+    @if (ViewBag.Debug != null)
+    {
+        <div class="alert alert-info">
+            @*調試信息: @ViewBag.Debug<br />*@
+            @if (ViewBag.CollectionCount != null)
+            {
+                <text>收藏數量: @ViewBag.CollectionCount</text>
+            }
+        </div>
+    }
+
+    @if (ViewBag.ExceptionDetails != null)
+    {
+        <div class="alert alert-danger">
+            <h5>詳細錯誤:</h5>
+            <pre>@ViewBag.ExceptionDetails</pre>
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null || ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            @(TempData["ErrorMessage"] ?? ViewBag.ErrorMessage)
+        </div>
+    }
+
+    @if (ViewBag.Collections == null || ViewBag.CollectionCount == 0)
+    {
+        <div class="alert alert-info">
+            您尚未收藏任何文獻。您可以在瀏覽文獻時點擊「添加到我的收藏」按鈕來添加收藏。
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>標題</th>
+                        <th>作者</th>
+                        <th>期刊/年份</th>
+                        <th>收藏日期</th>
+                        <th>筆記</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @try
+                    {
+                        foreach (WebApplication1.Controllers.CollectionViewModel item in ViewBag.Collections)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = item.PaperId })">
+                                        @item.Title
+                                    </a>
+                                </td>
+                                <td>@item.Authors</td>
+                                <td>@item.Journal (@item.Year)</td>
+                                <td>@item.CollectionDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#noteModal-@item.CollectionId">
+                                        <i class="bi bi-pencil"></i> 編輯筆記
+                                    </button>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = item.PaperId })" class="btn btn-outline-info btn-sm me-2">
+                                            <i class="bi bi-eye"></i> 查看
+                                        </a>
+                                        <form method="post" action="@Url.Action("Remove", "MyCollection")" onsubmit="return confirm('確定要刪除這個收藏嗎？');">
+                                            <input type="hidden" name="id" value="@item.CollectionId" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-trash"></i> 移除
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-danger">
+                                處理集合項目時發生錯誤: @ex.Message
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@* 筆記 Modals *@
+@if (ViewBag.Collections != null && ViewBag.CollectionCount > 0)
+{
+    try
+    {
+        foreach (WebApplication1.Controllers.CollectionViewModel item in ViewBag.Collections)
+        {
+            <div class="modal fade" id="noteModal-@item.CollectionId" tabindex="-1" aria-labelledby="noteModalLabel-@item.CollectionId" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="noteModalLabel-@item.CollectionId">文獻筆記</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" action="@Url.Action("UpdateNotes", "MyCollection")">
+                            <div class="modal-body">
+                                <input type="hidden" name="id" value="@item.CollectionId" />
+                                <div class="mb-3">
+                                    <label for="notes-@item.CollectionId" class="form-label">筆記內容</label>
+                                    <textarea class="form-control" id="notes-@item.CollectionId" name="notes" rows="5">@item.Notes</textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                                <button type="submit" class="btn btn-primary">保存</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    catch (Exception ex)
+    {
+        <div class="alert alert-danger">
+            處理模態框時發生錯誤: @ex.Message
+        </div>
+    }
+}
+
+<style>
+    .hero {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+</style>

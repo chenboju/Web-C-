@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - 文獻管理系統</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <!-- 添加 Font Awesome 圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        .admin-sidebar {
+            background-color: #343a40;
+            min-height: calc(100vh - 56px);
+            padding-top: 20px;
+            color: white;
+        }
+
+            .admin-sidebar .nav-link {
+                color: rgba(255, 255, 255, 0.8);
+                padding: 0.5rem 1rem;
+            }
+
+                .admin-sidebar .nav-link:hover {
+                    color: #fff;
+                    background-color: rgba(255, 255, 255, 0.1);
+                }
+
+                .admin-sidebar .nav-link.active {
+                    color: #fff;
+                    background-color: rgba(255, 255, 255, 0.2);
+                }
+
+            .admin-sidebar i {
+                margin-right: 10px;
+            }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .admin-header {
+            background-color: #1e88e5;
+            color: white;
+        }
+
+        .admin-footer {
+            padding: 15px 0;
+            text-align: center;
+            background-color: #f5f5f5;
+            margin-top: 20px;
+        }
+
+        /* 類別標籤樣式修正 */
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.6em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+            margin-right: 3px;
+        }
+
+        /* 基本標籤顏色 */
+        .badge-info {
+            color: #212529; /* 深色文字 */
+            background-color: #17a2b8;
+        }
+
+        /* RAG Fundamentals 標籤樣式 */
+        .badge-rag-fundamentals {
+            color: #212529; /* 深色文字 */
+            background-color: #54c7ec; /* 淺藍色背景 */
+        }
+
+        /* Graph-based RAG 標籤樣式 */
+        .badge-graph-based-rag {
+            color: #212529; /* 深色文字 */
+            background-color: #37b24d; /* 綠色背景 */
+        }
+
+        /* RAG Evaluation 標籤樣式 */
+        .badge-rag-evaluation {
+            color: #212529; /* 深色文字 */
+            background-color: #f76707; /* 橙色背景 */
+        }
+
+        /* 狀態標籤樣式 */
+        .badge-success {
+            color: #fff;
+            background-color: #28a745;
+        }
+
+        .badge-danger {
+            color: #fff;
+            background-color: #dc3545;
+        }
+
+        /* 確保表格中的文字顏色正確 */
+        .table td, .table th {
+            color: #212529; /* 深色文字確保在淺色背景下可見 */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Dashboard", "Admin")">文獻管理系統</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">
+                            <i class="fas fa-home"></i> 前台首頁
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Logout", "Home")">
+                            <i class="fas fa-sign-out-alt"></i> 登出
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 admin-sidebar">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Dashboard" ? "active" : "")" href="@Url.Action("Dashboard", "Admin")">
+                            <i class="fas fa-tachometer-alt"></i> 儀表板
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "AdminPaper" ? "active" : "")" href="@Url.Action("AdminPaper", "Admin")">
+                            <i class="fas fa-book"></i> 文獻管理
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-10 main-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <footer class="admin-footer">
+        <div class="container">
+            <p>&copy; @DateTime.Now.Year - 文獻管理系統</p>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

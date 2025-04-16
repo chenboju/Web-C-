@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - RAG文獻資料庫</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")">RAG文獻資料庫</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" href="@Url.Action("Index", "Home")">首頁</a>
+                        </li>
+                        @*<li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Categories" ? "active" : "")" href="@Url.Action("Categories", "Home")">分類瀏覽</a>
+                        </li>*@
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Papers" ? "active" : "")" href="@Url.Action("Papers", "PaperManagement")">文獻列表</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")" href="@Url.Action("About", "Home")">關於本站</a>
+                        </li>
+                        @if (Session["UserId"] != null && Convert.ToInt32(Session["UserId"]) == 1)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["Controller"].ToString() == "Admin" ? "active" : "")" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-speedometer2"></i> 管理功能
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("Dashboard", "Admin")">
+                                            <i class="bi bi-speedometer2"></i> 儀表板
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("AdminPaper", "Admin")">
+                                            <i class="bi bi-journal-text"></i> 文獻管理
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (Session["UserId"] != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "MyCollection")">
+                                    <i class="bi bi-bookmark-star"></i> 我的收藏
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i> @Session["Username"]
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="@Url.Action("Profile", "Account")">個人資料</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("ChangePassword", "Account")">修改密碼</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Home")">登出</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Login", "Home")">登入</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Register", "Home")">註冊</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer class="mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>關於RAG文獻資料庫</h5>
+                        <p>提供使用者搜尋、下載RAG(檢索增強生成)領域之論文，同時提供管理員對文獻資料的增刪查。</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>快速連結</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="@Url.Action("Index", "Home")">首頁</a></li>
+                            <li><a href="@Url.Action("Categories", "Home")">分類瀏覽</a></li>
+                            <li><a href="@Url.Action("Papers", "PaperManagement")">文獻列表</a></li>
+                            <li><a href="@Url.Action("About", "Home")">關於本站</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>連絡我們</h5>
+                        <address>
+                            <strong>地址:</strong> 雲林縣虎尾鎮文化路64號<br />
+                            <strong>聯絡信箱:</strong> <a href="mailto:contact@rag-literature.org">contact@rag-literature.org</a>
+                        </address>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-center mt-3">
+                        <p>&copy; @DateTime.Now.Year - RAG文獻資料庫 | 所有文獻僅供學術研究使用</p>
+                        <p>最後更新：@DateTime.Now.ToString("yyyy年MM月dd日")</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

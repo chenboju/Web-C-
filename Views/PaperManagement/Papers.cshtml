@@ -1,0 +1,161 @@
+﻿@{
+    ViewBag.Title = "文獻列表";
+}
+
+<div class="container mt-4">
+    <section class="hero mb-5">
+        <h2>文獻列表</h2>
+        <p>本站收集了RAG(檢索增強生成)領域的高質量研究文獻，按照發表時間排序，方便研究人員查閱和下載。</p>
+    </section>
+
+    <!-- 搜尋和篩選區域 -->
+    <div class="search-filter-box mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <form method="get" action="@Url.Action("Papers", "PaperManagement")" class="d-flex">
+                    <input type="text" class="form-control me-2" name="keyword" placeholder="搜索文獻...（標題、作者、摘要或關鍵字）" value="@Request["keyword"]">
+                    <button class="btn btn-primary" type="submit">搜索</button>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex justify-content-end">
+                    <select class="form-select" id="sortOption" style="max-width: 200px;">
+                        <option value="year" selected>按時間排序</option>
+                        <option value="clickCount">按點擊量排序</option>
+                        <option value="title">按標題排序</option>
+                        <option value="journal">按期刊排序</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文獻列表 -->
+    <section class="papers-list mb-5">
+        <div class="list-group">
+            @if (ViewBag.Papers != null && ViewBag.Papers.Count > 0)
+            {
+                foreach (var paper in ViewBag.Papers)
+                {
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">@paper.Title</h5>
+                            <small class="text-muted">@paper.Year 年</small>
+                        </div>
+                        <p class="mb-1">@paper.Authors</p>
+                        <p class="mb-1">@(paper.Abstract.Length > 200 ? paper.Abstract.Substring(0, 200) + "..." : paper.Abstract)</p>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <div>
+                                @if (!string.IsNullOrEmpty(paper.Keywords))
+                                {
+                                    foreach (var keyword in paper.Keywords.Split(','))
+                                    {
+                                        <span class="badge bg-primary">@keyword.Trim()</span>
+                                    }
+                                }
+                            </div>
+                            <div>
+                                <small class="text-muted me-3">期刊: @paper.Journal</small>
+                                <small class="text-muted me-3"><i class="bi bi-eye"></i> 瀏覽: @paper.ClickCount 次</small>
+
+                                <!-- 顯示讚數 -->
+                                @{
+                                    int likeCount = 0;
+                                    if (ViewBag.LikeCounts != null && ViewBag.LikeCounts.ContainsKey(paper.PaperId))
+                                    {
+                                        likeCount = ViewBag.LikeCounts[paper.PaperId];
+                                    }
+                                }
+                                <small class="text-muted me-3"><i class="bi bi-hand-thumbs-up"></i> 讚: @likeCount</small>
+
+                                <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = paper.PaperId })" class="btn btn-sm btn-outline-primary">查看詳情</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <p>暫無文獻資料</p>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- 分頁控制 -->
+    @if (ViewBag.TotalPages != null && ViewBag.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Papers", "PaperManagement", new { page = ViewBag.CurrentPage - 1, keyword = Request["keyword"], sort = Request["sort"] })" tabindex="-1" aria-disabled="@(ViewBag.CurrentPage == 1 ? "true" : "false")">上一頁</a>
+                </li>
+
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Papers", "PaperManagement", new { page = i, keyword = Request["keyword"], sort = Request["sort"] })">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Papers", "PaperManagement", new { page = ViewBag.CurrentPage + 1, keyword = Request["keyword"], sort = Request["sort"] })">下一頁</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+<style>
+    .hero {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-filter-box {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+    }
+
+    .list-group-item {
+        border-left: 5px solid #0d6efd;
+        transition: all 0.3s ease;
+    }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+
+    .badge {
+        margin-right: 5px;
+    }
+</style>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // 排序選項變更事件
+            $('#sortOption').change(function () {
+                var sortBy = $(this).val();
+                var currentUrl = window.location.href;
+                var url = new URL(currentUrl);
+
+                // 更新或添加排序參數
+                url.searchParams.set('sort', sortBy);
+
+                // 重新載入頁面
+                window.location.href = url.toString();
+            });
+
+            // 設置選中的排序選項
+            var currentSort = '@Request["sort"]';
+            if (currentSort) {
+                $('#sortOption').val(currentSort);
+            }
+        });
+    </script>
+}

@@ -1,0 +1,231 @@
+﻿@{
+    ViewBag.Title = "管理儀表板";
+}
+
+<div class="container mt-4">
+    <section class="hero mb-5">
+        <h2>管理儀表板</h2>
+        <p>歡迎回來，管理員。這裡顯示了網站的主要統計數據和活動摘要。</p>
+    </section>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title">會員統計</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="stats-box text-center mb-3">
+                                <h2 class="text-primary">@ViewBag.TodayNewUsers</h2>
+                                <p class="text-muted">今日新增會員</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="stats-box text-center mb-3">
+                                <h2 class="text-success">@ViewBag.WeekNewUsers</h2>
+                                <p class="text-muted">本週新增會員</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title">快速操作</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="@Url.Action("Papers", "PaperManagement")" class="btn btn-outline-primary mb-2">
+                            <i class="bi bi-file-earmark-text me-2"></i>文獻管理
+                        </a>
+                        <a href="#" class="btn btn-outline-success mb-2">
+                            <i class="bi bi-person me-2"></i>會員管理
+                        </a>
+                        <a href="#" class="btn btn-outline-info">
+                            <i class="bi bi-gear me-2"></i>系統設置
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="card-title">TOP 5 最多收藏文獻</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>標題</th>
+                                    <th>收藏次數</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.TopCollectedPapers != null)
+                                {
+                                    int rank = 1;
+                                    foreach (var paper in ViewBag.TopCollectedPapers)
+                                    {
+                                        <tr>
+                                            <td>@rank</td>
+                                            <td>
+                                                <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = paper.PaperId })">
+                                                    @paper.Title
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-warning text-dark">@paper.CollectionCount</span>
+                                            </td>
+                                        </tr>
+                                        rank++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    <h3 class="card-title">TOP 5 最多瀏覽文獻</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>標題</th>
+                                    <th>瀏覽次數</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.TopViewedPapers != null)
+                                {
+                                    int rank = 1;
+                                    foreach (var paper in ViewBag.TopViewedPapers)
+                                    {
+                                        <tr>
+                                            <td>@rank</td>
+                                            <td>
+                                                <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = paper.PaperId })">
+                                                    @paper.Title
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">@paper.ClickCount</span>
+                                            </td>
+                                        </tr>
+                                        rank++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title">TOP 5 最多評論文獻</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>標題</th>
+                                    <th>評論數</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.TopCommentedPapers != null)
+                                {
+                                    int rank = 1;
+                                    foreach (var paper in ViewBag.TopCommentedPapers)
+                                    {
+                                        <tr>
+                                            <td>@rank</td>
+                                            <td>
+                                                <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = paper.PaperId })">
+                                                    @paper.Title
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-success">@paper.CommentCount</span>
+                                            </td>
+                                        </tr>
+                                        rank++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h3 class="card-title">統計圖表</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info text-center">
+                        <p>統計圖表功能開發中...</p>
+                        <p>未來將顯示會員註冊趨勢、文獻瀏覽統計和熱門搜索關鍵字等圖表</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hero {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stats-box {
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        background-color: #f8f9fa;
+    }
+
+    .stats-box h2 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+</style>

@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "分類瀏覽";
+}
+
+<div class="container mt-4">
+    <section class="hero mb-5">
+        <h2>分類瀏覽</h2>
+        <p>RAG文獻按照9大類進行分類，方便研究人員查閱和下載。點擊下方分類卡片，瀏覽相關領域的文獻。</p>
+    </section>
+
+    <section>
+        <h2>主要分類</h2>
+        <div class="categories">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">基礎技術</h3>
+                            <p class="card-text">RAG的核心技術，包括檢索、知識庫構建和生成技術等方面。</p>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><a href="#">檢索技術</a></li>
+                                <li class="list-group-item"><a href="#">知識庫構建</a></li>
+                                <li class="list-group-item"><a href="#">生成技術</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">應用領域</h3>
+                            <p class="card-text">RAG在各種實際場景的應用研究，包括問答系統、內容生成和程式輔助等。</p>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><a href="#">問答系統</a></li>
+                                <li class="list-group-item"><a href="#">內容生成</a></li>
+                                <li class="list-group-item"><a href="#">程式輔助</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">評估與優化</h3>
+                            <p class="card-text">RAG系統的評估方法、優化技術和可解釋性研究等領域。</p>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><a href="#">性能評估方法</a></li>
+                                <li class="list-group-item"><a href="#">優化技術</a></li>
+                                <li class="list-group-item"><a href="#">可解釋性研究</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">相關模型研究</h3>
+                            <p class="card-text">與RAG相關的模型研究，包括大型語言模型、嵌入模型和索引技術等。</p>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><a href="#">大型語言模型</a></li>
+                                <li class="list-group-item"><a href="#">嵌入模型</a></li>
+                                <li class="list-group-item"><a href="#">向量索引</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">行業應用</h3>
+                            <p class="card-text">RAG在特定行業的應用研究，如醫療、法律、金融等領域。</p>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><a href="#">醫療健康</a></li>
+                                <li class="list-group-item"><a href="#">法律文件</a></li>
+                                <li class="list-group-item"><a href="#">金融分析</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">前沿研究</h3>
+                            <p class="card-text">RAG領域的最新前沿研究，包括最新發展趨勢和創新方向。</p>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><a href="#">多模態RAG</a></li>
+                                <li class="list-group-item"><a href="#">自我反思RAG</a></li>
+                                <li class="list-group-item"><a href="#">RAG與強化學習</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .hero {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .card .card-title {
+        color: #0d6efd;
+    }
+
+    .list-group-item a {
+        color: #495057;
+        text-decoration: none;
+    }
+
+        .list-group-item a:hover {
+            color: #0d6efd;
+            text-decoration: underline;
+        }
+</style>

@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "註冊";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <h2 class="card-title text-center mb-4">註冊帳號</h2>
+
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    <form method="post" action="@Url.Action("Register", "Home")">
+                        <div class="mb-3">
+                            <label for="Username" class="form-label">用戶名</label>
+                            <input type="text" class="form-control" id="Username" name="Username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Email" class="form-label">電子郵件</label>
+                            <input type="email" class="form-control" id="Email" name="Email" required>
+                            <div class="form-text">電子郵件為必填欄位，用於系統驗證</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="PhoneNumber" class="form-label">手機號碼</label>
+                            <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber" required>
+                            <div class="form-text">手機號碼為必填欄位，用於系統驗證</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Password" class="form-label">密碼</label>
+                            <input type="password" class="form-control" id="Password" name="Password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ConfirmPassword" class="form-label">確認密碼</label>
+                            <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="AgreeTerms" name="AgreeTerms" required>
+                            <label class="form-check-label" for="AgreeTerms">我同意網站的<a href="#">使用條款</a>和<a href="#">隱私政策</a></label>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">註冊</button>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p>已有帳號? <a href="@Url.Action("Login", "Home")">登入</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

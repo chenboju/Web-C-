@@ -1,0 +1,221 @@
+﻿@{
+    ViewBag.Title = "RAG文獻資料庫";
+}
+
+<div class="container mt-4">
+    <section class="hero mb-5">
+        <h2>RAG研究文獻集成平台</h2>
+        <p>本網站收集整理了RAG(檢索增強生成)領域的高質量研究文獻，方便研究人員查閱和下載。</p>
+    </section>
+
+    <!-- 搜尋欄 -->
+    <div class="search-box mb-4">
+        <form method="get" action="@Url.Action("Index", "Home")" class="d-flex">
+            <input type="text" class="form-control me-2" name="keyword" placeholder="搜索文獻...（標題、作者、摘要或關鍵字）" value="@ViewBag.Keyword">
+            <button class="btn btn-primary" type="submit">搜索</button>
+        </form>
+    </div>
+
+    <!-- 搜尋結果 -->
+    @if (!string.IsNullOrEmpty(ViewBag.Keyword))
+    {
+        <section class="papers-list mb-5">
+            <h3>搜尋結果: "@ViewBag.Keyword"</h3>
+
+            @if (ViewBag.SearchResults == null || ViewBag.SearchResults.Count == 0)
+            {
+                <div class="alert alert-info">
+                    <p>沒有找到符合 "@ViewBag.Keyword" 的搜尋結果。</p>
+                    <p>請嘗試使用不同的關鍵字，或瀏覽我們的<a href="@Url.Action("Categories", "Home")">分類頁面</a>。</p>
+                </div>
+            }
+            else
+            {
+                <p>共找到 @ViewBag.ResultCount 篇相關文獻</p>
+                <div class="list-group mb-4">
+                    @foreach (var paper in ViewBag.SearchResults)
+                    {
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">@paper.Title</h5>
+                                <small class="text-muted">@paper.Year 年</small>
+                            </div>
+                            <p class="mb-1">@paper.Authors</p>
+                            <p class="mb-1">@paper.Abstract</p>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <div>
+                                    @if (!string.IsNullOrEmpty(paper.Keywords))
+                                    {
+                                        foreach (var keyword in paper.Keywords.Split(','))
+                                        {
+                                            <span class="badge bg-primary">@keyword.Trim()</span>
+                                        }
+                                    }
+                                </div>
+                                <div>
+                                    <small class="text-muted me-3">期刊: @paper.Journal</small>
+                                    <small class="text-muted me-3">瀏覽: @paper.ClickCount 次</small>
+                                    <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = paper.PaperId })" class="btn btn-sm btn-outline-primary">查看詳情</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+    }
+
+    <!-- 如果沒有搜尋或搜尋後還要顯示首頁內容，保留以下部分 -->
+    <!-- 精選文獻 -->
+    <section class="mb-5">
+        <h2>精選文獻</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @if (ViewBag.FeaturedPapers != null && ViewBag.FeaturedPapers.Count > 0)
+            {
+                foreach (var paper in ViewBag.FeaturedPapers)
+                {
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">@paper.Title</h5>
+                                <p class="card-text authors">@paper.Authors</p>
+                                <p class="card-text">@(paper.Abstract.Length > 150 ? paper.Abstract.Substring(0, 150) + "..." : paper.Abstract)</p>
+                                <p class="card-text journal">@paper.Journal (@paper.Year)</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="@Url.Action("PaperDetail", "PaperManagement", new { id = paper.PaperId })" class="btn btn-primary">查看詳情</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <!-- 如果沒有資料，顯示預設卡片 -->
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</h5>
+                            <p class="card-text authors">Patrick Lewis, Ethan Perez, Aleksandra Piktus, et al.</p>
+                            <p class="card-text">大型預訓練語言模型已經在許多NLP任務上取得了顯著的成功，但它們在需要訪問外部知識的任務上仍面臨挑戰...</p>
+                            <p class="card-text journal">NeurIPS (2020), 頂級會議</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="#" class="btn btn-primary">查看詳情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">REALM: Retrieval-Augmented Language Model Pre-Training</h5>
+                            <p class="card-text authors">Kelvin Guu, Kenton Lee, Zora Tung, et al.</p>
+                            <p class="card-text">我們提出了一種檢索增強語言模型預訓練（REALM）方法，該方法在預訓練期間通過非參數記憶模塊學習使用相關世界知識...</p>
+                            <p class="card-text journal">ICML (2020), 頂級會議</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="#" class="btn btn-primary">查看詳情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection</h5>
+                            <p class="card-text authors">Akari Asai, Zeqiu Wu, Yizhong Wang, et al.</p>
+                            <p class="card-text">我們提出了Self-RAG，一種通過自我反思來學習檢索、生成和評審能力的方法...</p>
+                            <p class="card-text journal">arXiv preprint (2023), 預印本</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="#" class="btn btn-primary">查看詳情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- 研究領域分類 -->
+    <section class="mb-5">
+        <h2>研究領域分類</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">基礎技術</h3>
+                        <ul class="list-unstyled">
+                            <li><a href="#">檢索技術</a></li>
+                            <li><a href="#">知識庫構建</a></li>
+                            <li><a href="#">生成技術</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">應用領域</h3>
+                        <ul class="list-unstyled">
+                            <li><a href="#">問答系統</a></li>
+                            <li><a href="#">內容生成</a></li>
+                            <li><a href="#">程式輔助</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">評估與優化</h3>
+                        <ul class="list-unstyled">
+                            <li><a href="#">性能評估方法</a></li>
+                            <li><a href="#">優化技術</a></li>
+                            <li><a href="#">可解釋性研究</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 添加一些自訂樣式 -->
+    <style>
+        .hero {
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .authors {
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        .journal {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .search-box {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .list-group-item {
+            border-left: 5px solid #0d6efd;
+            transition: all 0.3s ease;
+        }
+
+            .list-group-item:hover {
+                background-color: #f8f9fa;
+            }
+
+        .badge {
+            margin-right: 5px;
+        }
+    </style>
+</div>

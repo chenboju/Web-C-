@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "個人資料";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>帳戶選單</h4>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">
+                        <i class="bi bi-person-circle me-2"></i> 個人資料
+                    </a>
+                    <a href="@Url.Action("ChangePassword", "Account")" class="list-group-item list-group-item-action">
+                        <i class="bi bi-shield-lock me-2"></i> 修改密碼
+                    </a>
+                    <a href="@Url.Action("Index", "MyCollection")" class="list-group-item list-group-item-action">
+                        <i class="bi bi-bookmark-star me-2"></i> 我的收藏
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h3>個人資料</h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null || ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            @(TempData["ErrorMessage"] ?? ViewBag.ErrorMessage)
+                        </div>
+                    }
+
+                    <form method="post" action="@Url.Action("UpdateProfile", "Account")">
+                        <div class="mb-3">
+                            <label for="Username" class="form-label">用戶名</label>
+                            <input type="text" class="form-control" id="Username" name="Username" value="@ViewBag.UserProfile.Username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Email" class="form-label">電子郵件</label>
+                            <input type="email" class="form-control" id="Email" name="Email" value="@ViewBag.UserProfile.Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="PhoneNumber" class="form-label">手機號碼</label>
+                            <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber" value="@ViewBag.UserProfile.PhoneNumber" required>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> 保存修改
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
